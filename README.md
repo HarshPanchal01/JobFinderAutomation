@@ -33,7 +33,7 @@ There are two options:
 - **Deduplication**: Tracks job history to ensure you never see the same job twice.
 - **Reporting**: Generates a Markdown summary and a JSON data file.
 - **Email Notifications**: Sends a full "Weekly Jobs Report" directly to your inbox.
-- **GitHub Actions Automation**: Can run weekly on a schedule and archive results in GitHub Issues.
+- **GitHub Actions Automation**: Can run weekly on a schedule and archive results in the form of GitHub Issues.
 - **Dockerized**: Consistent environment locally and in CI.
 
 ---
