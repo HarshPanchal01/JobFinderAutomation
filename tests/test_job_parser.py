@@ -91,6 +91,18 @@ def test_parse_job_with_htidocid():
     
     parsed = JobParser.parse_job(raw_job)
     
-    expected_link = "https://www.google.com/search?ibp=htl;jobs#fpstate=tldetail&htivrt=jobs&htidocid=test_id_123"
+    # Expected format: 
+    # https://www.google.com/search?ibp=htl;jobs&q=Software%20Engineer%20Tech%20Corp&htidocid=test_id_123#fpstate=tldetail&htivrt=jobs&htidocid=test_id_123
+    
+    expected_link = (
+        "https://www.google.com/search?"
+        "ibp=htl;jobs&"
+        "q=Software%20Engineer%20Tech%20Corp&"
+        "htidocid=test_id_123"
+        "#fpstate=tldetail&"
+        "htivrt=jobs&"
+        "htidocid=test_id_123"
+    )
+    
     assert parsed["link"] == expected_link
     logging.info("parse_job htidocid test passed.")

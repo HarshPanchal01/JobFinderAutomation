@@ -53,6 +53,10 @@ on:
         description: "HL (Language Code)"
         required: false
         type: string
+      email_receiver:
+        description: "Email Receiver (JSON list or comma-separated)"
+        required: false
+        type: string
 
 permissions:
   issues: write
@@ -96,7 +100,7 @@ jobs:
           HL: ${{ inputs.hl || vars.HL }}
           EMAIL_ADDRESS: ${{ vars.EMAIL_ADDRESS }}
           EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
-          EMAIL_RECEIVER: ${{ vars.EMAIL_RECEIVER }}
+          EMAIL_RECEIVER: ${{ inputs.email_receiver || vars.EMAIL_RECEIVER }}
           SMTP_SERVER: ${{ vars.SMTP_SERVER }}
           SMTP_PORT: ${{ vars.SMTP_PORT }}
         run: |

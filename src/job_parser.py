@@ -20,10 +20,19 @@ class JobParser:
         # Enhanced Link Generation
         htidocid = JobParser._extract_htidocid(job_data)
         if htidocid:
-            # Construct a clean desktop-friendly Google Jobs URL
-            # We encode the htidocid to ensure safety in the URL
             safe_id = urllib.parse.quote(htidocid)
-            link = f"https://www.google.com/search?ibp=htl;jobs#fpstate=tldetail&htivrt=jobs&htidocid={safe_id}"
+            query = f"{title} {company}"
+            safe_query = urllib.parse.quote(query)
+            
+            link = (
+                f"https://www.google.com/search?"
+                f"ibp=htl;jobs&"
+                f"q={safe_query}&"
+                f"htidocid={safe_id}"
+                f"#fpstate=tldetail&"
+                f"htivrt=jobs&"
+                f"htidocid={safe_id}"
+            )
         else:
             link = job_data.get('share_link')
 
