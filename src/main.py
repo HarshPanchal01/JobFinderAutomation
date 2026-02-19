@@ -102,6 +102,9 @@ def main():
                 skipped_salary += 1
                 continue
         
+        # Filter apply options to only include trusted domains
+        job['apply_options'] = job_filter.filter_apply_options(job)
+        
         logging.info(f"Found job: {parsed_job['title']} - Salary: {salary_str} - Posted: {parsed_job['posted_date']}")
         new_jobs.append(job)
         history.add_job(job)

@@ -115,7 +115,15 @@ class FileManager:
                         f.write(f"- **Salary:** {salary}\n")
                     
                     if link:
-                        f.write(f"- [**Apply Now**]({link})\n")
+                        f.write(f"- [**View on Google Jobs**]({link})\n")
+                    
+                    apply_options = job.get('apply_options', [])
+                    if apply_options:
+                        f.write("- **Apply Directly:**\n")
+                        for option in apply_options:
+                            opt_title = option.get('title', 'Apply')
+                            opt_link = option.get('link', '#')
+                            f.write(f"  - [{opt_title}]({opt_link})\n")
                     
                     f.write("\n---\n\n")
                 

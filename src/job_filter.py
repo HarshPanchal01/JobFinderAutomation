@@ -64,6 +64,58 @@ class JobFilter:
 
         return True, None
 
+    def filter_apply_options(self, job):
+        """
+        Filters the apply_options list to only include those from trusted domains
+        or direct company sites.
+        """
+        apply_options = job.get('apply_options', [])
+        if not apply_options:
+            return []
+            
+        # If trusted domains is None (filtering disabled), return all options
+        if not self.trusted_domains:
+            return apply_options
+            
+        filtered_options = []
+        company_name = job.get('company_name', '').lower()
+        normalized_company = ''.join(e for e in company_name if e.isalnum())
+
+        def _extract_hostname(raw_url: str) -> str:
+            if not raw_url:
+                return ""
+            parsed = urlparse(raw_url)
+            if not parsed.netloc and parsed.path and "://" not in raw_url:
+                parsed = urlparse(f"https://{raw_url}")
+
+            host = (parsed.hostname or "").lower()
+            if host.startswith("www."):
+                host = host[4:]
+            return host
+
+        for option in apply_options:
+            link = option.get('link', '').lower()
+            title = option.get('title', '').lower()
+            
+            is_trusted = False
+            # Check trusted domains
+            for domain in self.trusted_domains:
+                if domain in link or domain in title:
+                    is_trusted = True
+                    break
+            
+            # Check direct company page
+            if not is_trusted:
+                host = _extract_hostname(link)
+                normalized_host = ''.join(c for c in host if c.isalnum())
+                if normalized_company and normalized_company in normalized_host:
+                    is_trusted = True
+            
+            if is_trusted:
+                filtered_options.append(option)
+                
+        return filtered_options
+
     def has_reputable_source(self, job):
         """
         Checks if the job has at least one reputable application source.

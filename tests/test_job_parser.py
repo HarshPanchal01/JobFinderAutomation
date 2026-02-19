@@ -74,3 +74,23 @@ def test_parse_job_detected_extensions_salary():
     assert parsed["min_salary"] == 104000
     assert parsed["max_salary"] == 104000
     logging.info("parse_job detected_extensions salary test passed.")
+
+def test_parse_job_with_htidocid():
+    """Test parsing a job with a valid job_id containing htidocid."""
+    logging.info("Testing parse_job with htidocid...")
+    # Base64 encoded JSON: {"htidocid": "test_id_123"}
+    # echo -n '{"htidocid": "test_id_123"}' | base64
+    # eyJodGlkb2NpZCI6ICJ0ZXN0X2lkXzEyMyJ9
+    
+    raw_job = {
+        "title": "Software Engineer",
+        "company_name": "Tech Corp",
+        "job_id": "eyJodGlkb2NpZCI6ICJ0ZXN0X2lkXzEyMyJ9",
+        "share_link": "http://old-link.com"
+    }
+    
+    parsed = JobParser.parse_job(raw_job)
+    
+    expected_link = "https://www.google.com/search?ibp=htl;jobs#fpstate=tldetail&htivrt=jobs&htidocid=test_id_123"
+    assert parsed["link"] == expected_link
+    logging.info("parse_job htidocid test passed.")

@@ -129,3 +129,44 @@ def test_job_filter_punctuation_keyword(mock_config):
     }
     is_valid, reason = job_filter.is_valid(job3)
     assert is_valid is True
+
+def test_filter_apply_options(mock_config):
+    """Test filtering of apply options based on trusted domains and company website."""
+    job_filter = JobFilter(mock_config)
+    job = {
+        "company_name": "Tech Corp",
+        "apply_options": [
+            {"title": "LinkedIn", "link": "https://linkedin.com/jobs/123"},
+            {"title": "Glassdoor", "link": "https://glassdoor.com/job/456"},
+            {"title": "Spam Board", "link": "https://spam-jobs.com/789"},
+            {"title": "Tech Corp Careers", "link": "https://careers.techcorp.com/job/1"},
+            {"title": "Random Site", "link": "https://random.com/job/2"}
+        ]
+    }
+    
+    filtered_options = job_filter.filter_apply_options(job)
+    
+    # Should keep LinkedIn, Glassdoor (trusted) and Tech Corp (direct company match)
+    # Should remove Spam Board and Random Site
+    assert len(filtered_options) == 3
+    
+    links = [opt['link'] for opt in filtered_options]
+    assert "https://linkedin.com/jobs/123" in links
+    assert "https://glassdoor.com/job/456" in links
+    assert "https://careers.techcorp.com/job/1" in links
+    assert "https://spam-jobs.com/789" not in links
+
+def test_filter_apply_options_no_trusted_domains(mock_config):
+    """Test that all options are returned if trusted_domains is None."""
+    mock_config.trusted_domains = None
+    job_filter = JobFilter(mock_config)
+    job = {
+        "company_name": "Tech Corp",
+        "apply_options": [
+            {"title": "Spam Board", "link": "https://spam-jobs.com/789"}
+        ]
+    }
+    
+    filtered_options = job_filter.filter_apply_options(job)
+    assert len(filtered_options) == 1
+    assert filtered_options[0]['link'] == "https://spam-jobs.com/789"
