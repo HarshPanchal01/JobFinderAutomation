@@ -67,7 +67,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v6.0.2
 
       # Python setup is no longer needed as we use Docker
       # - name: Set up Python...
@@ -137,7 +137,7 @@ jobs:
           sudo chown -R $USER:$USER .
 
       - name: Upload Job Reports
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@v7.0.0
         with:
           name: job-reports
           path: |
@@ -176,7 +176,7 @@ jobs:
 
       - name: Create GitHub Issue
         id: create-issue
-        uses: peter-evans/create-issue-from-file@v6
+        uses: peter-evans/create-issue-from-file@v6.0.0
         with:
           title: Weekly Job Search Results
           content-filepath: ./summary.md
